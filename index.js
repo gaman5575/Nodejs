@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 
 // Route to check if server is working
 app.get('/', (req, res) => {
-    res.send('Hello World, from express');
+    res.send('Hello World, from Aman express');
 });
 
 // Route to add a user to the database
