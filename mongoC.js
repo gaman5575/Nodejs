@@ -24,7 +24,7 @@ const connectToDatabase = async () => {
         db = conn.db("nodedb");  // Set db once the connection is successful
     } catch (error) {
         console.error("Failed to connect to MongoDB Atlas:", error);
-        process.exit(1);  // Exit the process if the connection fails
+        process.exit(1);  
     }
 };
 
