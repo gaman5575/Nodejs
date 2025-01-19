@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu # Specify that the job should run on a self-hosted runner (and specify the OS if needed)
+    runs-on: ubuntu-latest # Specify that the job should run on a self-hosted runner (and specify the OS if needed)
 
     steps:
     # Step 1: Checkout code
