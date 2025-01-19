@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { initializeDatabase } from './mongoC.js';  // Import the initialization function
+import { initializeDatabase, getDb } from './mongoC.js';  // Import getDb to access the db object
 
 const port = 5000;
 const app = express();
@@ -24,11 +24,12 @@ app.get('/', (req, res) => {
 // Route to add a user to the database
 app.post('/addUser', async (req, res) => {
     try {
-        let collection = await db.collection("users");
-        let newDocument = req.body;
+        const db = getDb();  // Access the database only after it's initialized
+        const collection = await db.collection("users");
+        const newDocument = req.body;
         newDocument.date = new Date();
         
-        let result = await collection.insertOne(newDocument);
+        const result = await collection.insertOne(newDocument);
         console.log("New user added:", req.body);
         
         // Send response with status 201 (Created) after successful insertion
@@ -42,8 +43,9 @@ app.post('/addUser', async (req, res) => {
 // Route to get all users from the database
 app.get('/getUsers', async (req, res) => {
     try {
-        let collection = await db.collection("users");
-        let results = await collection.find({}).toArray();
+        const db = getDb();  // Access the database only after it's initialized
+        const collection = await db.collection("users");
+        const results = await collection.find({}).toArray();
         
         // Send response with status 200 (OK) and the users
         res.status(200).send(results);
@@ -57,7 +59,7 @@ app.get('/getUsers', async (req, res) => {
 const startServer = async () => {
     try {
         // Initialize database connection
-        await initializeDatabase();
+        await initializeDatabase();  // Ensure MongoDB connection before starting the server
         
         // Now that MongoDB is connected, start the Express server
         app.listen(port, '0.0.0.0', () => {
