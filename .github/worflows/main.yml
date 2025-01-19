@@ -1,0 +1,46 @@
+name: Nodejs Application Deploy
+
+on:
+  push:
+    branches:
+    - main # Trigger workflow on push to the 'main' branch
+  pull_request:
+    branches:
+    - main # Trigger workflow on pull request to the 'main' branch
+
+jobs:
+  build:
+    runs-on: ubuntu # Specify that the job should run on a self-hosted runner (and specify the OS if needed)
+
+    steps:
+    # Step 1: Checkout code
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Step 2: Login into Docker Hub
+    - name: Login into Docker Hub
+      uses: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD}}
+
+    # Step 3: Building Docker Images
+    - name: Docker image build
+      run: docker build -t  gaman5575/nodejs-app .
+
+    # Step 4: Publish to Dokcer hub
+    - name: Pushing to Docker Hub Repo
+      run: docker push gaman5575/nodejs-app:latest
+
+  Deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+    # Step 5: Pulling Image from Docker hub
+    - name: pull latest image from docker hub
+      run: docker pull gaman5575/nodejs-app:latest
+
+    # Step 6: Deleting Old container if any present
+    - name: Delete Old container
+      run: docker rm -f nodejs-app
+
+    # Step 7: Run Docker Container
+    - name: Run Docker container
+      run: dokcer run -d -p 5000:5000 --name nodejs-app -e MONGO_PASSWORD='${{ secrets.MONGO_PASSWORD }}' gaman5575/nodejs-app
