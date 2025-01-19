@@ -2,10 +2,8 @@ import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 dotenv.config();  // Load environment variables from .env file for local development (optional)
 
-// Get MongoDB password from the environment variable (GitHub secret
 const mongoPassword = process.env.MONGO_PASSWORD;
 
-// If you're working locally, .env should hold the password. If running in GitHub Actions, GitHub Secrets should provide it.
 if (!mongoPassword) {
     console.error("MongoDB password is missing. Please set the MONGO_PASSWORD environment variable.");
     process.exit(1);  // Exit if password is not found
@@ -24,12 +22,12 @@ const connectToDatabase = async () => {
         db = conn.db("nodedb");  // Set db once the connection is successful
     } catch (error) {
         console.error("Failed to connect to MongoDB Atlas:", error);
-        process.exit(1);  
+        process.exit(1);  // Exit if the connection fails
     }
 };
 
-// Export the connectToDatabase function as a named export
+// Export the connectToDatabase function to initialize the database in the main server file
 export const initializeDatabase = connectToDatabase;
 
-// Export the db object for use in other files (e.g., in your Express server)
-export default db;
+// Export a getter function to access the db after initialization
+export const getDb = () => db;
