@@ -2,7 +2,7 @@ import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 dotenv.config();  // Load environment variables from .env file for local development (optional)
 
-// Get MongoDB password from the environment variable (GitHub secret)
+// Get MongoDB password from the environment variable (GitHub secret
 const mongoPassword = process.env.MONGO_PASSWORD;
 
 // If you're working locally, .env should hold the password. If running in GitHub Actions, GitHub Secrets should provide it.
